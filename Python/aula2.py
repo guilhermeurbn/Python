@@ -2,7 +2,7 @@ velocidade = 61
 local_carro = 98
 
 RADAR_1 = 60
-LOCAL_RADAR = 100
+LOCAL_RADAR = 100 
 RADAR_RANGE = 1 # a distancia que o radar pega +/- '1km'
 
 diferenca_mais = local_carro + RADAR_RANGE
