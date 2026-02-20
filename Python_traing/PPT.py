@@ -1,58 +1,49 @@
-"""pedra pepel ou tesoura"""
-
+#import requests
 import random
-import time
 
-print('-' * 34)
-print("VAMOS JOGAR PEDRA PAPEL OU TESOURA")
-print('-' * 34)
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL = "llama3"  # ou "llama3:8b"
 
-jogos = 0
-perdeu = 0
-vitoria = 0
-empate = 0
-while (True):
-    enter = input("gostaria de jogar = s[im] / n[ão]: ").lower()
-    if enter == "sim":
-        num = random.choice(["papel", "pedra", "tesoura"])
-        escolha = input("escolha [PEDRA] [PAPEL] [TESOURA]: ").lower()
-        jogos += 1
-        if num == escolha:
-            print(f"{num} x {escolha} = empate")
-            empate += 1
-        elif num == "pedra" and escolha == "tesoura":
-            print(f"{num} x {escolha} = você Perdeu!")
-            perdeu += 1
-        elif num == "pedra" and escolha == "papel":
-            print(f"{num} x {escolha} = você Ganhou!")
-            vitoria += 1
-        elif num == "papel" and escolha == "pedra":
-            print(f"{num} x {escolha} = você Perdeu!")
-            perdeu += 1
-        elif num == "papel" and escolha == "tesoura":
-            print(f"{num} x {escolha} = você Ganhou!")
-            vitoria += 1
-        elif num == "tesoura" and escolha == "papel":
-            print(f"{num} x {escolha} = você Perdeu!")
-            perdeu += 1
-        elif num == "tesoura" and escolha == "pedra":
-            print(f"{num} x {escolha} = você Ganhou!")
-            vitoria += 1
+historico = []
+def ia_jogar():
+    if len(historico) < 3:
+        return random.choice(["pedra", "papel", "tesoura"])
+
+    pedra = historico.count("pedra")
+    papel = historico.count("papel")
+    tesoura = historico.count("tesoura")
+
+    if pedra >= papel and pedra >= tesoura:
+        return "papel"
+    elif papel >= pedra and papel >= tesoura:
+        return "tesoura"
     else:
-        break
-print('-' * 20)
-print("FIM DE JOGO")
-print('-' * 20)
+        return "pedra"
+    
+def decidir_ganhador(usuario, ia):
+    if usuario == ia:
+        return "Empate!"
+    elif (usuario == "pedra" and ia == "tesoura") or \
+         (usuario == "papel" and ia == "pedra") or \
+         (usuario == "tesoura" and ia == "papel"):
+        return "Você ganhou!"
+    else:
+        return "A IA ganhou!"
 
-print('\n')
-print("----VAMOS VER SEUS RESULTADOS!----\n")
-time.sleep(2)
+def main():
+    print("Vamos jogar Pedra, Papel ou Tesoura contra a IA!")
+    while True:
+        usuario = input("Escolha [pedra, papel, tesoura] ou 'sair' para encerrar: ").lower()
+        historico.append(usuario)
+        if usuario == "sair":
+            break
+        if usuario not in ["pedra", "papel", "tesoura"]:
+            print("Escolha inválida!")
+            continue
+        ia = ia_jogar()
+        print(f"IA jogou: {ia}")
+        print(decidir_ganhador(usuario, ia))
+        print("-" * 30)
 
-print(f"você Jogou: {jogos}x")
-print(f"você Ganhou: {vitoria}x")
-print(f"você Perdeu: {perdeu}x")
-print(f"você Empatou: {empate}x")
-
-
-            
-
+if __name__ == "__main__":
+    main()
