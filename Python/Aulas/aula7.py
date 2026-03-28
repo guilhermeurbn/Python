@@ -58,9 +58,11 @@ while(usuario != "exit"):
     elif "remover" in usuario:
         rem_name = input("Qual nome pra remover: ").lstrip().rstrip()
         if find(lista, rem_name):
-            lista.pop()
+            lista.pop(lugar(lista, rem_name))
             print(color("NOME DELETADO", "red"))
     elif "lista" in usuario:
         print(lista)
+    else:
+        exit()
         
 print(lista)
