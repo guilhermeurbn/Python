@@ -1,72 +1,65 @@
 #!/usr/bin/env python3
 #replicando o seu CPF
 
-i = 0
-cpf_tmp = []
+
+
 cpf_old = input("digite seu CPF: ")
-cpf = []
-# 1ª Parte: Separando apenas os numeros
-while(i < len(cpf_old)):
-    if not cpf_old[i].isdigit():
+
+def just_numbers(cpf_old):
+    i = 0
+    nums = []
+    while (i < len(cpf_old)):
+        if cpf_old[i].isdigit():
+            nums.append(int(cpf_old[i]))
         i += 1
-        continue
-    cpf.append(int(cpf_old[i]))
-    i += 1
-                                    #012.345.678-99
-print(cpf)
+    return nums
 
-#2ªParte: multiplicar numa ordem regressiva do 10
+def mult_regressiva(nums, mult):
+    i = 0
+    result = []
+    while (i < len(nums)):
+        result.append(nums[i] * mult)
+        i += 1
+        mult -= 1
+    return result
 
-i = 0
-j = 10
-while(i < len(cpf)):
-    cpf_tmp.append(cpf[i] * j)
-    i += 1
-    j -= 1
+def soma_all(lista):
+    i = 0
+    total = 0
+    while (i < len(lista)):
+        total += lista[i]
+        i += 1
+    return total
 
-#3ªParte: Somar todos os valores
-i = 0
-cpf_soma = 0
-while (i < len(cpf)):                 #746824890
-    cpf_soma += cpf_tmp[i]
-    i += 1
+def new_numbers(soma):
+    soma *= 10
+    soma %= 11
+    if soma > 9:
+        return 0
+    return soma
 
-#4ªParte: Multiplicar o resultado anterior por 10
 
-cpf_soma *= 10
+cpf = just_numbers(cpf_old)
 
-cpf_soma %= 11
+primeiros_9 = cpf[:9]
 
-if cpf_soma > 9:
-    cpf.append(0)
+tmp1 = mult_regressiva(primeiros_9, 10)
+soma_1 = soma_all(tmp1)
+dig1 = new_numbers(soma_1)
 
+primeiros_10 = primeiros_9 + [dig1]
+
+tmp2 = mult_regressiva(primeiros_10, 11)
+soma_2 = soma_all(tmp2)
+dig2 = new_numbers(soma_2)
+
+cpf_new = [dig1, dig2]
+
+
+print(f"o final do seu codigo é {cpf_new}")
+print("Seu CPF é:", cpf)
+
+if cpf[-2:] == cpf_new:
+    print("CPF correto")
 else:
-    cpf.append(cpf_soma)
-
-#Segundo digito
-
-cpf_tmp = []
-i = 0
-j = 11
-while(i < len(cpf)):
-    cpf_tmp.append(cpf[i] * j)
-    i += 1
-    j -= 1
-
-#3ªParte: Somar todos os valores
-i = 0
-cpf_soma = 0
-while (i < len(cpf)):                 #746824890
-    cpf_soma += cpf_tmp[i]
-    i += 1
-
-#4ªParte: multiplicar por 10
-cpf_soma *= 10
-cpf_soma %= 11
-
-if cpf_soma > 9:
-    cpf.append(0)
-
-else:
-    cpf.append(cpf_soma)
-print(cpf)
+    print("cpf incorreto")
